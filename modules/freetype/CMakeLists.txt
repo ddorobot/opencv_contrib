@@ -8,6 +8,19 @@ if(PKG_CONFIG_FOUND)
   pkg_search_module(HARFBUZZ harfbuzz)
 endif()
 
+find_package(Freetype REQUIRED)
+
+# find_package(HarfBuzz) is not included in cmake
+set(HARFBUZZ_DIR "$ENV{HARFBUZZ_DIR}" CACHE PATH "HarfBuzz directory")
+find_path(HARFBUZZ_INCLUDE_DIRS
+    NAMES hb-ft.h PATH_SUFFIXES harfbuzz
+    HINTS ${HARFBUZZ_DIR}/include)
+find_library(HARFBUZZ_LIBRARIES
+    NAMES harfbuzz
+    HINTS ${HARFBUZZ_DIR}/lib)
+find_package_handle_standard_args(HARFBUZZ
+    DEFAULT_MSG HARFBUZZ_LIBRARIES HARFBUZZ_INCLUDE_DIRS)
+
 if(NOT FREETYPE_FOUND)
   message(STATUS "freetype2:   NO")
 else()
